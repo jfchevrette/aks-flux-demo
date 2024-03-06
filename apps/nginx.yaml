@@ -1,37 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
-  namespace: nginx
+  name: podinfo
+  namespace: podinfo
 spec:
   selector:
     matchLabels:
-      app: nginx
+      app: podinfo
   replicas: 2
   template:
     metadata:
       labels:
-        app: nginx
+        app: podinfo
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
+      - name: podinfo
+        image: stefanprodan/podinfo:latest
         resources:
           limits:
             memory: "128Mi"
             cpu: "500m"
         ports:
-        - containerPort: 80
+        - containerPort: 9898
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
-  namespace: nginx
+  name: podinfo
+  namespace: podinfo
 spec:
   selector:
-    app: nginx
+    app: podinfo
   ports:
   - protocol: TCP
-    port: 8080
-    targetPort: 80
+    port: 80
+    targetPort: 9898
+  type: LoadBalancer
